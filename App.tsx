@@ -2,7 +2,7 @@ import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {createSharedElementStackNavigator} from 'react-navigation-shared-element';
+// import {createSharedElementStackNavigator} from 'react-navigation-shared-element';
 
 import AntDesign from 'react-native-vector-icons/AntDesign';
 
@@ -14,17 +14,18 @@ import ItemDetails from './src/screens/ItemDetailsScreen';
 
 import {StatusBar, StyleSheet} from 'react-native';
 import {useSelector} from 'react-redux';
-import {RootState} from '@reduxjs/toolkit/query';
+import {RootState} from './src/store/store';
+import {RootStackParamList, RootTabParamList} from './src/types/types';
 
-const Tab = createBottomTabNavigator();
-const SharedStack = createSharedElementStackNavigator();
-const Stack = createNativeStackNavigator();
+// const SharedStack = createSharedElementStackNavigator();
+const Tab = createBottomTabNavigator<RootTabParamList>();
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function HomeStackNavigator() {
   return (
-    <SharedStack.Navigator initialRouteName="Home">
-      <SharedStack.Screen name="Home" component={HomeScreen} />
-      <SharedStack.Screen
+    <Stack.Navigator>
+      <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Screen
         name="Details"
         component={ItemDetails}
         options={{
@@ -32,12 +33,12 @@ function HomeStackNavigator() {
           title: 'About',
           presentation: 'modal',
         }}
-        sharedElements={(route, otherRoute, showing) => {
-          const {item} = route.params;
-          return [`${item.id}`];
-        }}
+        // sharedElements={(route, otherRoute, showing) => {
+        //   const {item} = route.params;
+        //   return [`${item.id}`];
+        // }}
       />
-    </SharedStack.Navigator>
+    </Stack.Navigator>
   );
 }
 
@@ -74,8 +75,8 @@ function FavoriteStack() {
 }
 
 function App() {
-  const {favoriteItems} = useSelector((state: any) => state.favoriteGIFS);
-  const {isSignedIn} = useSelector((state: any) => state.Auth);
+  const {favoriteItems} = useSelector((state: RootState) => state.favoriteGIFS);
+  const {isSignedIn} = useSelector((state: RootState) => state.Auth);
   return (
     <>
       <StatusBar barStyle="dark-content" />

@@ -18,16 +18,15 @@ import Animated, {
 import Header from '../components/DetailsHeader';
 // import {SharedElement} from 'react-navigation-shared-element';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import {Gesture, GestureDetector} from 'react-native-gesture-handler';
-import {type GifItem} from '../types/types';
-
-interface DetailsScreenProps {
-  route: any;
-  navigation: any;
-}
+import {
+  Gesture,
+  GestureDetector,
+  NativeViewGestureHandlerPayload,
+} from 'react-native-gesture-handler';
+import type {DetailsScreenProps, GifItem} from '../types/types';
 
 const DetailsScreen = ({route, navigation}: DetailsScreenProps) => {
-  const [modal, setModal] = useState(null);
+  const [modal, setModal] = useState<string | null>(null);
 
   const {item} = route.params;
   const smallImageUri = item.smallImageUri;
@@ -49,6 +48,9 @@ const DetailsScreen = ({route, navigation}: DetailsScreenProps) => {
     navigation.goBack();
   };
   const handleUrlPress = () => {
+    if (!item.url) {
+      return;
+    }
     Linking.openURL(item.url);
   };
 

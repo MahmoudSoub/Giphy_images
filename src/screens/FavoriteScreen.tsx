@@ -4,11 +4,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import ItemTile from '../components/ItemTile';
 import FavoritesHeader from '../components/FavoritesHeader';
 import {resetFavorites} from '../store/favorites';
-import {type GifItem} from '../types/types';
-
-type FavoriteScreenProps = {
-  navigation: any;
-};
+import {FavoriteScreenProps, type GifItem} from '../types/types';
 
 const FavoriteScreen = ({navigation}: FavoriteScreenProps) => {
   const {favoriteItems} = useSelector((state: any) => state.favoriteGIFS);

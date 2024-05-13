@@ -1,3 +1,37 @@
+import type {NativeStackScreenProps} from '@react-navigation/native-stack';
+import type {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
+
+export type RootStackParamList = {
+  Home: undefined;
+  Search: undefined;
+  Favorite: undefined;
+  Details: {item: GifItem};
+};
+
+export type HomeScreenProps = NativeStackScreenProps<
+  RootStackParamList,
+  'Home'
+>;
+export type SearchScreenProps = NativeStackScreenProps<
+  RootStackParamList,
+  'Search'
+>;
+export type FavoriteScreenProps = NativeStackScreenProps<
+  RootStackParamList,
+  'Favorite'
+>;
+export type DetailsScreenProps = NativeStackScreenProps<
+  RootStackParamList,
+  'Details'
+>;
+
+export type RootTabParamList = {
+  HomeStack: undefined;
+  SearchStack: undefined;
+  FavoriteStack: undefined;
+  SignIn: undefined;
+};
+
 export interface GifItem {
   id: string;
   title: string;

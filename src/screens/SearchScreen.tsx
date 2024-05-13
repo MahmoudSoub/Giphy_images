@@ -5,11 +5,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import ItemTile from '../components/ItemTile';
 import {ActivityIndicator} from 'react-native';
 import debounce from 'lodash/debounce';
-import {type GifItem} from '../types/types';
-
-interface SearchScreenProps {
-  navigation: any;
-}
+import type {GifItem, SearchScreenProps} from '../types/types';
 
 const SearchScreen = ({navigation}: SearchScreenProps) => {
   const [text, setText] = useState('');
@@ -32,14 +28,9 @@ const SearchScreen = ({navigation}: SearchScreenProps) => {
     }
     const getSearchResults = debounce(async () => {
       currentPage.current = 1;
-      // if (controllerRef.current) {
-      // controllerRef.current.abort();
-      // }
-      // controllerRef.current = new AbortController();
-      // const signal = controllerRef.current.signal;
+
       setIsLoading(true);
       try {
-        // setItems([]);
         const response = await fetchSearchGifs(text);
         const data = response.data;
         setDidRequest(true);

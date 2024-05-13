@@ -2,11 +2,8 @@ import {FlatList, StyleSheet} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {fetchGifs} from '../util/GiphyAPI';
 import ItemTile from '../components/ItemTile';
-import {type GifItem} from '../types/types';
-
-interface HomeScreenProps {
-  navigation: any;
-}
+// import type {HomeScreenProps} from '../types/types';
+import type {GifItem, HomeScreenProps} from '../types/types';
 
 const HomeScreen = ({navigation}: HomeScreenProps) => {
   const [items, setItems] = useState<GifItem[]>([]);
