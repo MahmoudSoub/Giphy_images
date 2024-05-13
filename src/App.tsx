@@ -6,16 +6,16 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import AntDesign from 'react-native-vector-icons/AntDesign';
 
-import HomeScreen from './src/screens/HomeScreen';
-import SignInScreen from './src/screens/SignInScreen';
-import SearchScreen from './src/screens/SearchScreen';
-import FavoriteScreen from './src/screens/FavoriteScreen';
-import ItemDetails from './src/screens/ItemDetailsScreen';
+import HomeScreen from './screens/HomeScreen';
+import SignInScreen from './screens/SignInScreen';
+import SearchScreen from './screens/SearchScreen';
+import FavoriteScreen from './screens/FavoriteScreen';
+import ItemDetails from './screens/ItemDetailsScreen';
 
 import {StatusBar, StyleSheet} from 'react-native';
 import {useSelector} from 'react-redux';
-import {RootState} from './src/store/store';
-import {RootStackParamList, RootTabParamList} from './src/types/types';
+import {RootState} from './store/store';
+import {RootStackParamList, RootTabParamList} from './types/types';
 
 // const SharedStack = createSharedElementStackNavigator();
 const Tab = createBottomTabNavigator<RootTabParamList>();
