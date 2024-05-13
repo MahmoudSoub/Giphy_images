@@ -8,11 +8,11 @@ interface FavoritesHeaderProps {
   sortState: number;
 }
 
-const FavoritesHeader: React.FC<FavoritesHeaderProps> = ({
+const FavoritesHeader = ({
   handleResetFavorites,
   handleSortPress,
   sortState,
-}) => {
+}: FavoritesHeaderProps) => {
   return (
     <View style={styles.container}>
       <View>

@@ -22,7 +22,6 @@ export const fetchSearchGifs = async (searchTerm: string, currentPage = 1) => {
   }&rating=g&lang=en&bundle=messaging_non_clips`;
   try {
     const response = await axios.get(SEARCH_URL);
-    console.log(SEARCH_URL);
     return response?.data;
   } catch (error) {
     console.log(error);

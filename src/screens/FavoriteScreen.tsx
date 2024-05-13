@@ -45,8 +45,6 @@ const FavoriteScreen = ({navigation}: FavoriteScreenProps) => {
         });
 
   const renderList = ({item}: {item: GifItem}) => {
-    console.log(Object.keys(item));
-
     return <ItemTile {...item} onPress={() => pressHandler(item)} />;
   };
   return (

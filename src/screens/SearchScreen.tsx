@@ -12,9 +12,9 @@ const SearchScreen = ({navigation}: SearchScreenProps) => {
   const [items, setItems] = useState<GifItem[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [didRequest, setDidRequest] = useState(false);
-  const [pagination, setPagination] = useState(null);
   const [callOnScrollEnd, setCallOnScrollEnd] = useState(true);
   const currentPage = useRef(1);
+  // const [pagination, setPagination] = useState(null);
   // const controllerRef = useRef();
 
   const pressHandler = (item: GifItem) => {
@@ -49,19 +49,15 @@ const SearchScreen = ({navigation}: SearchScreenProps) => {
   const fetchNextPage = async () => {
     try {
       currentPage.current += 1;
-      console.log('before api call');
       const response = await fetchSearchGifs(text, currentPage.current);
-      console.log('after api call');
-
       const nextPage = response.data;
-      setPagination(response.pagination);
+      // setPagination(response.pagination);
       if (nextPage) {
         setItems([...items, ...nextPage]);
       }
     } catch (error) {
       console.log(error);
     } finally {
-      console.log('in finally ');
       setIsLoading(false);
     }
   };
@@ -70,8 +66,6 @@ const SearchScreen = ({navigation}: SearchScreenProps) => {
     if (isLoading || items.length <= 0) return;
 
     if (!callOnScrollEnd) {
-      console.log('on End Reached');
-
       setIsLoading(true);
       fetchNextPage();
       setCallOnScrollEnd(true);
