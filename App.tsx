@@ -1,117 +1,143 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
 import React from 'react';
-import type {PropsWithChildren} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+import {NavigationContainer} from '@react-navigation/native';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {createSharedElementStackNavigator} from 'react-navigation-shared-element';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
+import HomeScreen from './src/screens/HomeScreen';
+import SignInScreen from './src/screens/SignInScreen';
+import SearchScreen from './src/screens/SearchScreen';
+import FavoriteScreen from './src/screens/FavoriteScreen';
+import ItemDetails from './src/screens/ItemDetailsScreen';
 
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
+import {StatusBar, StyleSheet} from 'react-native';
+import {useSelector} from 'react-redux';
+import {RootState} from '@reduxjs/toolkit/query';
+
+const Tab = createBottomTabNavigator();
+const SharedStack = createSharedElementStackNavigator();
+const Stack = createNativeStackNavigator();
+
+function HomeStackNavigator() {
   return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
+    <SharedStack.Navigator initialRouteName="Home">
+      <SharedStack.Screen name="Home" component={HomeScreen} />
+      <SharedStack.Screen
+        name="Details"
+        component={ItemDetails}
+        options={{
+          headerShown: false,
+          title: 'About',
+          presentation: 'modal',
+        }}
+        sharedElements={(route, otherRoute, showing) => {
+          const {item} = route.params;
+          return [`${item.id}`];
+        }}
+      />
+    </SharedStack.Navigator>
   );
 }
 
-function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
+function SearchStackNavigator() {
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
+    <Stack.Navigator>
+      <Stack.Screen name="Search" component={SearchScreen} />
+      <Stack.Screen
+        name="Details"
+        component={ItemDetails}
+        options={{headerShown: false, title: 'About'}}
       />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+    </Stack.Navigator>
+  );
+}
+
+function FavoriteStack() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="Favorite"
+        component={FavoriteScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="Details"
+        component={ItemDetails}
+        options={{headerShown: false, title: 'About'}}
+      />
+    </Stack.Navigator>
+  );
+}
+
+function App() {
+  const {favoriteItems} = useSelector((state: any) => state.favoriteGIFS);
+  const {isSignedIn} = useSelector((state: any) => state.Auth);
+  return (
+    <>
+      <StatusBar barStyle="dark-content" />
+      <NavigationContainer>
+        <Tab.Navigator>
+          {isSignedIn ? (
+            <>
+              <Tab.Screen
+                name="HomeStack"
+                component={HomeStackNavigator}
+                options={{
+                  headerShown: false,
+                  title: 'Home',
+                  tabBarIcon: () => (
+                    <AntDesign name="home" size={24} color="black" />
+                  ),
+                }}
+              />
+              <Tab.Screen
+                name="FavoriteStack"
+                component={FavoriteStack}
+                options={{
+                  tabBarIcon: () => (
+                    <AntDesign name="hearto" size={24} color="black" />
+                  ),
+                  title: 'Favorites',
+                  headerShown: false,
+                  tabBarBadge:
+                    favoriteItems.length > 0 ? favoriteItems.length : undefined,
+                  tabBarBadgeStyle: {backgroundColor: 'red'},
+                }}
+              />
+              <Tab.Screen
+                name="SearchStack"
+                component={SearchStackNavigator}
+                options={{
+                  headerShown: false,
+                  tabBarIcon: () => (
+                    <AntDesign name="search1" size={24} color="black" />
+                  ),
+                  title: 'Search',
+                }}
+              />
+            </>
+          ) : (
+            <Tab.Screen
+              name="SignIn"
+              component={SignInScreen}
+              options={{tabBarStyle: {display: 'none'}, headerShown: false}}
+            />
+          )}
+        </Tab.Navigator>
+      </NavigationContainer>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
