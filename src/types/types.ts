@@ -1,5 +1,4 @@
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
-import type {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
 
 export type RootStackParamList = {
   Home: undefined;
@@ -47,4 +46,16 @@ export interface GifItem {
 
 export interface ItemTileProps extends GifItem {
   onPress: () => void;
+}
+
+export interface PaginationInfo {
+  count: number;
+  offset: number;
+  total_count: number;
+}
+
+export enum SortState {
+  None,
+  Ascending,
+  Descending,
 }

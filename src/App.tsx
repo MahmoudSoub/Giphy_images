@@ -2,22 +2,16 @@ import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-// import {createSharedElementStackNavigator} from 'react-navigation-shared-element';
-
 import AntDesign from 'react-native-vector-icons/AntDesign';
-
 import HomeScreen from './screens/HomeScreen';
 import SignInScreen from './screens/SignInScreen';
 import SearchScreen from './screens/SearchScreen';
 import FavoriteScreen from './screens/FavoriteScreen';
 import ItemDetails from './screens/ItemDetailsScreen';
-
-import {StatusBar, StyleSheet} from 'react-native';
+import {StatusBar} from 'react-native';
 import {useSelector} from 'react-redux';
 import {RootState} from './store/store';
 import {RootStackParamList, RootTabParamList} from './types/types';
-
-// const SharedStack = createSharedElementStackNavigator();
 const Tab = createBottomTabNavigator<RootTabParamList>();
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -33,10 +27,6 @@ function HomeStackNavigator() {
           title: 'About',
           presentation: 'modal',
         }}
-        // sharedElements={(route, otherRoute, showing) => {
-        //   const {item} = route.params;
-        //   return [`${item.id}`];
-        // }}
       />
     </Stack.Navigator>
   );
@@ -75,7 +65,7 @@ function FavoriteStack() {
 }
 
 function App() {
-  const {favoriteItems} = useSelector((state: RootState) => state.favoriteGIFS);
+  const {favoriteItems} = useSelector((state: RootState) => state.FavoriteGifs);
   const {isSignedIn} = useSelector((state: RootState) => state.Auth);
   return (
     <>
@@ -133,13 +123,5 @@ function App() {
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
 
 export default App;

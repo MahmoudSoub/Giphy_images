@@ -1,4 +1,5 @@
 import axios from 'axios';
+import Toast from 'react-native-toast-message';
 
 const API_KEY = 'zwP7Z7O94LpXZ3Y1AO9NIx1IXXAVP7uo';
 
@@ -10,7 +11,11 @@ export const fetchGifs = async (currentPage = 1) => {
     const response = await axios.get(TRENDING_URL);
     return response?.data.data;
   } catch (error) {
-    console.log(error);
+    Toast.show({
+      type: 'error', // Set toast type to 'error'
+      text1: 'Error fetching images',
+      text2: `${error}`,
+    });
     return null;
   }
 };
@@ -24,7 +29,11 @@ export const fetchSearchGifs = async (searchTerm: string, currentPage = 1) => {
     const response = await axios.get(SEARCH_URL);
     return response?.data;
   } catch (error) {
-    console.log(error);
+    Toast.show({
+      type: 'error', // Set toast type to 'error'
+      text1: 'Error fetching images',
+      text2: `${error}`,
+    });
     return null;
   }
 };
