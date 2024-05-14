@@ -8,16 +8,16 @@ import {
   PERSIST,
   PURGE,
   REGISTER,
-} from 'redux-persist'; // import storage from 'redux-persist/lib/storage';
+} from 'redux-persist';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import favoritesReducer from './favorites';
-import SignSlice from './isSignedIn';
+import FavoritesReducer from './Favorites';
+import AuthReducer from './Auth';
 import {combineReducers} from '@reduxjs/toolkit';
 
 const rootReducer = combineReducers({
-  favoriteGIFS: favoritesReducer,
-  Auth: SignSlice,
+  FavoriteGifs: FavoritesReducer,
+  Auth: AuthReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;
