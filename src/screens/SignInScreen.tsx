@@ -1,22 +1,31 @@
 import React, {useState} from 'react';
-import {View, Text, TextInput, Button, StyleSheet, Alert} from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  StyleSheet,
+  Alert,
+  TouchableWithoutFeedback,
+} from 'react-native';
 import {useDispatch} from 'react-redux';
-import {login} from '../store/isSignedIn';
+import {login} from '../store/Auth';
+import {Keyboard} from 'react-native';
 
 const Signin = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const dispatch = useDispatch();
   const handleSignIn = () => {
-    if (email === '' && password === '') {
-      Alert.alert('Error', 'Please enter email and password');
-      return;
-    }
-    if (!email.includes('@')) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; //validate email format (test@mbc.net)
+    const passwordRegex = /^.{6,}$/; //validates password (minimum 6 characters)
+
+    if (!emailRegex.test(email)) {
       Alert.alert('Error', 'Please enter a valid email');
       return;
     }
-    if (password.length < 6) {
+
+    if (!passwordRegex.test(password)) {
       Alert.alert('Error', 'Password must be at least 6 characters long');
       return;
     }
@@ -24,28 +33,30 @@ const Signin = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}> Sign In </Text>
-      <View style={styles.inputContainer}>
-        <TextInput
-          value={email}
-          onChangeText={setEmail}
-          placeholder="Email"
-          keyboardType="email-address"
-          style={styles.input}
-        />
-        <TextInput
-          value={password}
-          onChangeText={setPassword}
-          placeholder="Password"
-          secureTextEntry
-          style={styles.input}
-        />
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+      <View style={styles.container}>
+        <Text style={styles.title}> Sign In </Text>
+        <View style={styles.inputContainer}>
+          <TextInput
+            value={email}
+            onChangeText={setEmail}
+            placeholder="Email"
+            keyboardType="email-address"
+            style={styles.input}
+          />
+          <TextInput
+            value={password}
+            onChangeText={setPassword}
+            placeholder="Password"
+            secureTextEntry
+            style={styles.input}
+          />
+        </View>
+        <View style={styles.button}>
+          <Button title="Sign In" onPress={handleSignIn} />
+        </View>
       </View>
-      <View style={styles.button}>
-        <Button title="Sign In" onPress={handleSignIn} />
-      </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 };
 
