@@ -1,20 +1,18 @@
 import {Pressable, StyleSheet, Text, View} from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import React, {PropsWithChildren} from 'react';
-import {type GifItem} from '../types/types';
+import React from 'react';
+import type {GifItem} from '../types/types';
 
-type DetailsHeaderProps = PropsWithChildren<{
+type DetailsHeaderProps = {
   isFavorite: boolean;
-  handleAddToFavorite: (item: GifItem) => void;
-  handleRemoveFromFavorite: (item: GifItem) => void;
+  handleFavoriteToggle: (item: GifItem) => void;
   handleGoBack: () => void;
   item: GifItem;
-}>;
+};
 
 const DetailsHeader = ({
   isFavorite,
-  handleAddToFavorite,
-  handleRemoveFromFavorite,
+  handleFavoriteToggle,
   handleGoBack,
   item,
 }: DetailsHeaderProps) => {
@@ -26,19 +24,15 @@ const DetailsHeader = ({
         </Pressable>
       </View>
       <Text style={styles.title}>About</Text>
-      {isFavorite ? (
-        <Pressable
-          style={styles.favoirteIcon}
-          onPress={() => handleRemoveFromFavorite(item)}>
-          <AntDesign name="heart" size={24} color="red" />
-        </Pressable>
-      ) : (
-        <Pressable
-          style={styles.favoirteIcon}
-          onPress={() => handleAddToFavorite(item)}>
-          <AntDesign name="hearto" size={24} color="black" />
-        </Pressable>
-      )}
+      <Pressable
+        style={styles.favoirteIcon}
+        onPress={() => handleFavoriteToggle(item)}>
+        <AntDesign
+          name={isFavorite ? 'heart' : 'hearto'}
+          size={24}
+          color={isFavorite ? 'red' : 'black'}
+        />
+      </Pressable>
     </View>
   );
 };
@@ -51,7 +45,6 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 64,
     justifyContent: 'space-between',
-    // alignItems: 'center',
     paddingTop: 30,
 
     backgroundColor: 'white',
