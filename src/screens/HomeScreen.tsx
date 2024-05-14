@@ -1,14 +1,31 @@
-import {FlatList, StyleSheet} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import {FlatList, Pressable, StyleSheet} from 'react-native';
+import React, {useEffect, useLayoutEffect, useState} from 'react';
 import {fetchGifs} from '../util/GiphyAPI';
 import ItemTile from '../components/ItemTile';
-// import type {HomeScreenProps} from '../types/types';
 import type {GifItem, HomeScreenProps} from '../types/types';
+import Toast from 'react-native-toast-message';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import {useDispatch} from 'react-redux';
+import {logout} from '../store/Auth';
 
 const HomeScreen = ({navigation}: HomeScreenProps) => {
   const [items, setItems] = useState<GifItem[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
+
+  const dispatch = useDispatch();
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerLeft: () => {
+        return (
+          <Pressable onPress={() => dispatch(logout())}>
+            <AntDesign name="logout" size={24} />
+          </Pressable>
+        );
+      },
+    });
+  }, [navigation]);
 
   const pressHandler = (item: GifItem) => {
     navigation.navigate('Details', {item});
@@ -24,7 +41,11 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
       };
       getImages();
     } catch (error) {
-      console.log(error);
+      Toast.show({
+        type: 'error', // Set toast type to 'error'
+        text1: 'Error fetching images',
+        text2: `${error}`,
+      });
     }
   }, []);
 
@@ -37,7 +58,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
     }
     const nextPage = await fetchGifs(currentPage + 1);
     if (nextPage) {
-      setItems([...items, ...nextPage]);
+      setItems(previousItems => [...previousItems, ...nextPage]);
       setCurrentPage(currentPage + 1);
     }
   };

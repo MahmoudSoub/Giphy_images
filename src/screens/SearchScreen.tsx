@@ -5,7 +5,8 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import ItemTile from '../components/ItemTile';
 import {ActivityIndicator} from 'react-native';
 import debounce from 'lodash/debounce';
-import type {GifItem, SearchScreenProps} from '../types/types';
+import type {GifItem, PaginationInfo, SearchScreenProps} from '../types/types';
+import Toast from 'react-native-toast-message';
 
 const SearchScreen = ({navigation}: SearchScreenProps) => {
   const [text, setText] = useState('');
@@ -14,8 +15,7 @@ const SearchScreen = ({navigation}: SearchScreenProps) => {
   const [didRequest, setDidRequest] = useState(false);
   const [callOnScrollEnd, setCallOnScrollEnd] = useState(true);
   const currentPage = useRef(1);
-  // const [pagination, setPagination] = useState(null);
-  // const controllerRef = useRef();
+  const [pagination, setPagination] = useState<PaginationInfo | null>(null);
 
   const pressHandler = (item: GifItem) => {
     navigation.navigate('Details', {item});
@@ -36,7 +36,11 @@ const SearchScreen = ({navigation}: SearchScreenProps) => {
         setDidRequest(true);
         setItems(data);
       } catch (error) {
-        console.log(error);
+        Toast.show({
+          type: 'error',
+          text1: 'Error fetching images',
+          text2: `${error}`,
+        });
       } finally {
         setIsLoading(false);
       }
@@ -48,15 +52,28 @@ const SearchScreen = ({navigation}: SearchScreenProps) => {
 
   const fetchNextPage = async () => {
     try {
+      if (
+        pagination &&
+        pagination.offset + pagination.count >= pagination.total_count
+      ) {
+        setCallOnScrollEnd(false);
+        return;
+      }
+
       currentPage.current += 1;
       const response = await fetchSearchGifs(text, currentPage.current);
       const nextPage = response.data;
-      // setPagination(response.pagination);
+      setPagination(response.pagination);
       if (nextPage) {
-        setItems([...items, ...nextPage]);
+        setItems(previousItems => [...previousItems, ...nextPage]);
       }
+      console.log(pagination);
     } catch (error) {
-      console.log(error);
+      Toast.show({
+        type: 'error',
+        text1: 'Error fetching images',
+        text2: `${error}`,
+      });
     } finally {
       setIsLoading(false);
     }
