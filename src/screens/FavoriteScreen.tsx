@@ -3,12 +3,12 @@ import React, {useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import ItemTile from '../components/ItemTile';
 import FavoritesHeader from '../components/FavoritesHeader';
-import {resetFavorites} from '../store/favorites';
-import {FavoriteScreenProps, type GifItem} from '../types/types';
+import {resetFavorites} from '../store/Favorites';
+import {FavoriteScreenProps, GifItem, SortState} from '../types/types';
 
 const FavoriteScreen = ({navigation}: FavoriteScreenProps) => {
-  const {favoriteItems} = useSelector((state: any) => state.favoriteGIFS);
-  const [sortState, setSortState] = useState(0);
+  const {favoriteItems} = useSelector((state: any) => state.FavoriteGifs);
+  const [sortState, setSortState] = useState(SortState.None);
   const dispatch = useDispatch();
 
   const pressHandler = (item: GifItem) => {
@@ -34,12 +34,12 @@ const FavoriteScreen = ({navigation}: FavoriteScreenProps) => {
   };
 
   const displayedArray =
-    sortState === 0
-      ? favoriteItems.slice()
+    sortState === SortState.None
+      ? favoriteItems
       : [...favoriteItems].sort((a, b) => {
           const titleA = a.title.toLowerCase();
           const titleB = b.title.toLowerCase();
-          return sortState === 1
+          return sortState === SortState.Ascending
             ? titleA.localeCompare(titleB)
             : titleB.localeCompare(titleA);
         });

@@ -1,8 +1,6 @@
 import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
-// import Animated from 'react-native-reanimated';
-// import {SharedElement} from 'react-navigation-shared-element';
-import {type GifItem, type ItemTileProps} from '../types/types';
+import type {ItemTileProps} from '../types/types';
 
 const ItemTile = ({
   title,

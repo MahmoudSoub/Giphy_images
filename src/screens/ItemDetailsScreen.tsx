@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {addFavorite, removeFavorite} from '../store/favorites';
+import {addFavorite, removeFavorite} from '../store/Favorites';
 import {
   Image,
   Linking,
@@ -15,38 +15,32 @@ import Animated, {
   useSharedValue,
   useAnimatedStyle,
 } from 'react-native-reanimated';
-import Header from '../components/DetailsHeader';
-// import {SharedElement} from 'react-navigation-shared-element';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import {
-  Gesture,
-  GestureDetector,
-  NativeViewGestureHandlerPayload,
-} from 'react-native-gesture-handler';
+import {Gesture, GestureDetector} from 'react-native-gesture-handler';
 import type {DetailsScreenProps, GifItem} from '../types/types';
+import DetailsHeader from '../components/DetailsHeader';
 
 const DetailsScreen = ({route, navigation}: DetailsScreenProps) => {
   const [modal, setModal] = useState<string | null>(null);
 
   const {item} = route.params;
   const smallImageUri = item.smallImageUri;
-  const {favoriteItems} = useSelector((state: any) => state.favoriteGIFS);
+  const {favoriteItems} = useSelector((state: any) => state.FavoriteGifs);
   const favoriteItemsIds = favoriteItems.map((item: GifItem) => item.id);
   const isFavorite = favoriteItemsIds.includes(item.id);
 
   const dispatch = useDispatch();
 
-  const handleAddToFavorite = (item: GifItem) => {
-    dispatch(addFavorite(item));
-  };
-
-  const handleRemoveFromFavorite = (item: GifItem) => {
-    dispatch(removeFavorite({id: item.id}));
+  const handleFavoriteToggle = (item: GifItem) => {
+    isFavorite
+      ? dispatch(removeFavorite({id: item.id}))
+      : dispatch(addFavorite(item));
   };
 
   const handleGoBack = () => {
     navigation.goBack();
   };
+
   const handleUrlPress = () => {
     if (!item.url) {
       return;
@@ -70,32 +64,22 @@ const DetailsScreen = ({route, navigation}: DetailsScreenProps) => {
 
   return (
     <View style={styles.container}>
-      <Header
+      <DetailsHeader
         handleGoBack={handleGoBack}
         item={item}
         isFavorite={isFavorite}
-        handleAddToFavorite={handleAddToFavorite}
-        handleRemoveFromFavorite={handleRemoveFromFavorite}
+        handleFavoriteToggle={handleFavoriteToggle}
       />
       <ScrollView
         style={styles.container}
         contentContainerStyle={{paddingBottom: 60}}>
         <View style={styles.imageContainer}>
-          {/* <SharedElement id={`${item.id}`}> */}
           <Pressable
             onPress={() => {
               setModal(item.id);
             }}>
-            <Image
-              // sharedTransitionTag={`${item.id}`}
-              // source={{
-              //   uri: 'https://static.vecteezy.com/vite/assets/photo-masthead-375-b8ae1548.webp',
-              // }}
-              source={{uri: smallImageUri}}
-              style={styles.image}
-            />
+            <Image source={{uri: smallImageUri}} style={styles.image} />
           </Pressable>
-          {/* </SharedElement> */}
         </View>
         <Text style={styles.title}>{item.title}</Text>
         <Text numberOfLines={1} style={styles.description}>
@@ -145,18 +129,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
-    // paddingVertical: 40,
   },
 
   imageContainer: {
     flex: 1,
-    // shadowColor: '#000',
-    // shadowOffset: {
-    //   width: 0,
-    //   height: 2,
-    // },
-    // shadowOpacity: 0.25,
-    // shadowRadius: 3.84,
   },
   image: {
     resizeMode: 'cover',
@@ -204,7 +180,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#F2F2F2',
   },
   details: {
-    textAlign: 'center',
     flexDirection: 'row',
     marginBottom: 8,
   },

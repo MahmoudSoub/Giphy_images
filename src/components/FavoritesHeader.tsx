@@ -1,11 +1,12 @@
 import {Pressable, StyleSheet, Text, View} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import React from 'react';
+import {SortState} from '../types/types';
 
 interface FavoritesHeaderProps {
   handleResetFavorites: () => void;
   handleSortPress: () => void;
-  sortState: number;
+  sortState: SortState;
 }
 
 const FavoritesHeader = ({
@@ -17,25 +18,17 @@ const FavoritesHeader = ({
     <View style={styles.container}>
       <View>
         <Pressable style={styles.backIcon} onPress={handleSortPress}>
-          {sortState === 0 ? (
-            <MaterialCommunityIcons
-              name="sort-ascending"
-              size={24}
-              color="black"
-            />
-          ) : sortState === 1 ? (
-            <MaterialCommunityIcons
-              name="sort-ascending"
-              size={24}
-              color="royalblue"
-            />
-          ) : (
-            <MaterialCommunityIcons
-              name="sort-descending"
-              size={24}
-              color="royalblue"
-            />
-          )}
+          <MaterialCommunityIcons
+            name={
+              sortState === SortState.None
+                ? 'sort-ascending'
+                : sortState === SortState.Ascending
+                ? 'sort-ascending'
+                : 'sort-descending'
+            }
+            size={24}
+            color={sortState === 0 ? 'black' : 'royalblue'}
+          />
         </Pressable>
       </View>
       <Text style={styles.title}>Favorites</Text>
